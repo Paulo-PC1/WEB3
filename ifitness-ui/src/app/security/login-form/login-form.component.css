@@ -1,0 +1,12 @@
+.login {
+  max-width: 400px;
+  margin: auto;
+}
+
+.title {
+  text-align: center;
+}
+
+button, a, input{
+  width: 100%;
+}
