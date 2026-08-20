@@ -1,22 +1,20 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { ActivitiesListComponent } from './activities/activities-list/activities-list.component';
-import { LoginFormComponent } from './security/login-form/login-form.component';
 import { AuthService } from './security/auth.service';
+import { NavbarComponent } from './core/navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
-    ActivitiesListComponent,
-    LoginFormComponent
+    NavbarComponent 
   ],
-    providers: [
+  providers: [
     AuthService
   ],
-        
+  
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

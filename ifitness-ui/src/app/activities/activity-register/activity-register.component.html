@@ -1,0 +1,41 @@
+<div class="container">
+  <form #f="ngForm" autocomplete="off" (ngSubmit)="save(f)">
+
+    <div class="p-grid">
+      <div class="p-col-12 title">
+        <h1>Nova Atividade</h1>
+      </div>
+
+      <div class="p-col-12 p-md-6 my-2 p-fluid">
+        <label>Tipo</label>
+        <p-select [options]="types" placeholder="Selecione" name="type"
+        [(ngModel)]="activity.type"></p-select>
+      </div>
+
+      <div class="p-col-12 p-md-6 my-2 p-fluid">
+        <label class="calendar">Data</label>
+        <p-datepicker [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" dateFormat="dd/mm/yy"
+        [(ngModel)]="activity.date" name="date"></p-datepicker>
+      </div>
+
+      <div class="p-col-12 p-md-9 my-2 p-fluid">
+        <label>Distância (Km)</label>
+        <input pInputText type="number" step="0.1" [(ngModel)]="activity.distance" name="distance">
+      </div>
+      <div class="p-col-12 p-md-9 my-2 p-fluid">
+        <label>Duração (Min)</label>
+        <input pInputText type="number" step="1" [(ngModel)]="activity.duration" name="duration">
+      </div>
+      <div class="p-col-12">
+      	<p>
+	        <button pButton class="my-2" type="submit" label="Salvar" [disabled]="f.invalid"></button>
+          <button pButton class="my-2" type="button" label="Nova" class="p-button-info"></button>
+        </p>
+      </div>
+      <div class="p-col-12">
+	        <a class="my-2" href="javascript:;">Voltar para a pesquisa</a>
+      </div>
+    </div>
+
+  </form>
+</div>

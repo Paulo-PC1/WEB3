@@ -9,7 +9,6 @@
       <p-table [value]="activities" responsiveLayout="stack" [breakpoint]="'768px'">
         <ng-template pTemplate="header">
           <tr>
-            <th>Usuário</th>
             <th>Tipo</th>
             <th>Data</th>
             <th>Distância</th>
@@ -19,11 +18,23 @@
         </ng-template>
         <ng-template pTemplate="body" let-activity>
           <tr>
-            <td>{{ activity.user }}</td>
-            <td>{{ activity.type }}</td>
+            <td>
+              <span *ngIf="activity.type === 'CORRIDA'">
+                <img src="running_icon.png" alt="Corrida">
+              </span>
+              <span *ngIf="activity.type === 'CAMINHADA'">
+                <img src="walking_icon.png" alt="Caminhada">
+              </span>
+              <span *ngIf="activity.type === 'CICLISMO'">
+                <img src="cycling_icon.png" alt="Ciclismo">
+              </span>
+              <span *ngIf="activity.type === 'NATACAO'">
+                <img src="swimming_icon.png" alt="Natação">
+              </span>
+            </td>
             <td>{{ activity.date }}</td>
-            <td>{{ activity.distance }}</td>
-            <td>{{ activity.duration }}</td>
+            <td>{{ activity.distance | number: '1.1-1'}} km</td>
+            <td>{{ activity.duration }} min</td>
               <td class="col-actions">
                 <a pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"></a>
                 <button pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"></button>

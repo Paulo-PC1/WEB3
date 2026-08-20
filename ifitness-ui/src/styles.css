@@ -25,3 +25,17 @@ body {
 .col-actions .p-button {
   margin: 1px;
 }
+
+form {
+  margin-right: .25em;
+  max-width: 400px;
+  margin: auto;
+}
+
+.title {
+  text-align: center;
+}
+
+button, input, .p-select  {
+  width: 100%;
+}

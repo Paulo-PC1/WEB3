@@ -31,6 +31,7 @@ public class TokenService {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
+        		
         
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -38,6 +39,7 @@ public class TokenService {
                 .expiresAt(now.plus(1, ChronoUnit.HOURS)) // Token expira em 1 hora
                 .subject(authentication.getName())
                 .claim("authorities", authorities)
+                .claim("user_id, )
                 .build();
         
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
