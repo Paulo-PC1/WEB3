@@ -1,16 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
 @import "primeicons/primeicons.css";
 
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   color: #404C51;
-}
-
-@media (min-width: 1200px) {
-  .container {
-    width: 1170px;
-    margin: 0 auto;
-  }
 }
 
 .col-actions-header {
@@ -38,4 +32,11 @@ form {
 
 button, input, .p-select  {
   width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+    margin: 0 auto;
+  }
 }

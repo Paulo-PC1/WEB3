@@ -18,7 +18,6 @@ import { RouterModule } from '@angular/router';
     TooltipModule,
     RouterModule
   ],
-
   templateUrl: './activities-list.component.html',
   styleUrl: './activities-list.component.css'
 })
@@ -31,8 +30,7 @@ export class ActivitiesListComponent {
     private confirmation: ConfirmationService,
     private messageService: MessageService,
     private errorHandler: ErrorHandlerService
-  )
-  { }
+  ){ }
 
   ngOnInit(): void {
     this.list();
@@ -46,7 +44,7 @@ export class ActivitiesListComponent {
       .catch(error => this.errorHandler.handle(error));
   }
 
-    confirmRemoval(activity: any): void {
+  confirmRemoval(activity: any): void {
     this.confirmation.confirm({
       message: 'Tem certeza que deseja excluir?',
       accept: () => {
@@ -63,4 +61,7 @@ export class ActivitiesListComponent {
       })
       .catch(error => this.errorHandler.handle(error));
   }
+
+  
 }
+

@@ -4,7 +4,6 @@ import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-message',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <div *ngIf="hasError()" class="p-message p-message-error">
@@ -12,11 +11,11 @@ import { FormControl } from '@angular/forms';
     </div>
   `,
   styles: `
-  .p-message-error {
-    padding: 3px;
-    margin: 0;
-    margin-top: 4px;
-  }
+    .p-message-error {
+      padding: 3px;
+      margin: 0;
+      margin-top: 4px;
+    }
   `
 })
 export class MessageComponent {

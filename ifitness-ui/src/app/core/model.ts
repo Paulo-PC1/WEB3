@@ -2,6 +2,24 @@ import moment from 'moment';
 
 export class User {
   id!: number;
+  name!: string;
+  email!: string;
+  date!: Date;
+  password!: string;
+  gender!: string;
+  active = true;
+
+  static toJson(user: User): any {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      date: moment(user.date).format('DD/MM/YYYY'),
+      gender: user.gender,
+      active: user.active
+    }
+  }
 }
 
 export class Activity {

@@ -1,4 +1,4 @@
-CREATE TABLE permission (
+	CREATE TABLE permission (
 	id BIGINT(20) PRIMARY KEY,
 	description VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

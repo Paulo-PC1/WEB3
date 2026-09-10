@@ -13,7 +13,7 @@
             <th>Data</th>
             <th>Distância</th>
             <th>Duração</th>
-            <th class="col-actions-header"></th> 
+            <th class="col-actions-header"></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-activity>
@@ -35,12 +35,19 @@
             <td>{{ activity.date }}</td>
             <td>{{ activity.distance | number: '1.1-1'}} km</td>
             <td>{{ activity.duration }} min</td>
-              <td class="col-actions">
+            <td class="col-actions">
                 <a pButton icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="top"
                 [routerLink]="['/activities', activity.id]"></a>
                 <button pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"
-                (click)="confirmRemoval(activity)"></button>
-              </td>
+                  (click)="confirmRemoval(activity)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td>
+               Nenhuma atividade cadastrada.
+            </td>
           </tr>
         </ng-template>
       </p-table>

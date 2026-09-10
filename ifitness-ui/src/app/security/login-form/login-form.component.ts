@@ -6,7 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../auth.service';
 
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login-form',
@@ -15,7 +15,8 @@ import { Router } from '@angular/router';
     CommonModule,
     FormsModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    RouterModule
   ],
   providers: [
     JwtHelperService
@@ -43,4 +44,6 @@ export class LoginFormComponent {
       this.msg = 'Usuário e/ou senha inválida!';
     });
   }
+
+
 }

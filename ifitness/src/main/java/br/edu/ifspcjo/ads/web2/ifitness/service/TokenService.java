@@ -52,7 +52,6 @@ public class TokenService {
         
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
-
     
     public String generateRefreshToken(Authentication authentication) {
         Instant now = Instant.now();
@@ -73,7 +72,7 @@ public class TokenService {
      * Valida um token e extrai o 'subject' (nome de usuário).
      * @param token O token JWT a ser validado.
      * @return Um Optional contendo o nome de usuário se o token for válido, ou vazio caso contrário.
-     */
+]     */
     public Optional<String> validateTokenAndGetSubject(String token) {
         try {
             Jwt jwt = this.decoder.decode(token);
@@ -87,5 +86,4 @@ public class TokenService {
             return Optional.empty();
         }
     }
-    
 }
