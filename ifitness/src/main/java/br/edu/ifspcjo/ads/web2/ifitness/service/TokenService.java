@@ -43,7 +43,7 @@ public class TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS)) // Token expira em 1 hora
+                .expiresAt(now.plus(30, ChronoUnit.SECONDS)) // Token expira em 30 segundos
                 .subject(authentication.getName())
                 .claim("authorities", authorities)
                 .claim("user_id", userOptional.get().getId())

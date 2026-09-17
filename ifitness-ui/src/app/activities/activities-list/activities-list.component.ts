@@ -6,7 +6,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ActivityService } from '../activity.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ErrorHandlerService } from '../../core/error-handler.service';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-activities-list',
@@ -17,6 +18,9 @@ import { RouterModule } from '@angular/router';
     TableModule,
     TooltipModule,
     RouterModule
+  ],
+  providers:[
+    Title
   ],
   templateUrl: './activities-list.component.html',
   styleUrl: './activities-list.component.css'
@@ -29,10 +33,13 @@ export class ActivitiesListComponent {
     private activityService: ActivityService,
     private confirmation: ConfirmationService,
     private messageService: MessageService,
-    private errorHandler: ErrorHandlerService
+    private errorHandler: ErrorHandlerService,
+    private title: Title,
+    private router: Router
   ){ }
 
   ngOnInit(): void {
+    this.title.setTitle('Listagem de Atividades');
     this.list();
   }
 
@@ -41,7 +48,11 @@ export class ActivitiesListComponent {
       .then(result => {
         this.activities = result;
       })
-      .catch(error => this.errorHandler.handle(error));
+      .catch(error => {
+        if (error.status === 401 || error.status === 403) {
+            this.router.navigate(['/login']);
+        }
+      });
   }
 
   confirmRemoval(activity: any): void {

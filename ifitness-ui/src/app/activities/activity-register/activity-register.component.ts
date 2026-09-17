@@ -13,6 +13,7 @@ import { MessageComponent } from '../../shared/message/message.component';
 import { ErrorHandlerService } from '../../core/error-handler.service';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-activity-register',
@@ -28,6 +29,9 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
     MessageComponent,
     RouterModule
    ],
+   providers:[
+    Title
+  ],
   templateUrl: './activity-register.component.html',
   styleUrl: './activity-register.component.css'
 })
@@ -48,7 +52,8 @@ export class ActivityRegisterComponent {
     private errorHandler: ErrorHandlerService,
     private messageService: MessageService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private title: Title
   ){
     this.activity = new Activity(this.auth.jwtPayload?.user_id);
   }
@@ -58,6 +63,7 @@ export class ActivityRegisterComponent {
     if(id != 'new'){
       this.loadActivity(id);
     }
+    this.title.setTitle('Cadastro de Atividade');// aqui!
   }
 
   get editing(): boolean {

@@ -84,7 +84,7 @@ public class AuthController {
     }
     
     @PostMapping("/logout")
-    public String logout(HttpServletResponse response) {
+    public void logout(HttpServletResponse response) {
         // Para fazer logout, criamos um cookie que expira imediatamente
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true).secure(false).path("/auth")
@@ -92,7 +92,6 @@ public class AuthController {
                 .sameSite("Strict").build();
         
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return "Logout realizado com sucesso.";
     }
     
 }
