@@ -9,6 +9,7 @@ import Aura from '@primeng/themes/aura';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { IfitnessHttpInterceptor } from './security/ifitness-http-interceptor';
+import { DatePipe } from '@angular/common';
 
 export function tokenGetter(): any {
   return localStorage.getItem('token');
@@ -41,6 +42,7 @@ export const appConfig: ApplicationConfig = {
       provide: HTTP_INTERCEPTORS,
       useClass: IfitnessHttpInterceptor,
       multi: true
-    }
+    },
+    DatePipe
   ]
 };

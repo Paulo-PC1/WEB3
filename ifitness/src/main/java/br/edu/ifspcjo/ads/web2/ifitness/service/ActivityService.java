@@ -12,6 +12,7 @@ import br.edu.ifspcjo.ads.web2.ifitness.domain.model.Activity;
 import br.edu.ifspcjo.ads.web2.ifitness.domain.model.User;
 import br.edu.ifspcjo.ads.web2.ifitness.repository.ActivityRepository;
 import br.edu.ifspcjo.ads.web2.ifitness.repository.UserRepository;
+import br.edu.ifspcjo.ads.web2.ifitness.repository.filter.ActivityFilter;
 import br.edu.ifspcjo.ads.web2.ifitness.service.exception.NonExistentOrInactiveUserException;
 import jakarta.validation.Valid;
 
@@ -56,6 +57,10 @@ public class ActivityService {
 			return activityRepository.findByUser(user.get());
 		}
 		return null;
+	}
+	
+	public List<Activity> filter(ActivityFilter activityFilter){
+		return activityRepository.filter(activityFilter);
 	}
 
 }

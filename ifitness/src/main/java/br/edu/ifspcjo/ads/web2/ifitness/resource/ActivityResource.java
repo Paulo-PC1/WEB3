@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifspcjo.ads.web2.ifitness.domain.model.Activity;
 import br.edu.ifspcjo.ads.web2.ifitness.repository.ActivityRepository;
+import br.edu.ifspcjo.ads.web2.ifitness.repository.filter.ActivityFilter;
 import br.edu.ifspcjo.ads.web2.ifitness.service.ActivityService;
 import jakarta.validation.Valid;
 
@@ -34,8 +35,8 @@ public class ActivityResource {
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_ACTIVITY')")
-	public List<Activity> list() {
-		return activityRepository.findAll();
+	public List<Activity> filter(ActivityFilter activityFilter){
+		return activityService.filter(activityFilter);
 	}
 
 	@GetMapping("/{id}")

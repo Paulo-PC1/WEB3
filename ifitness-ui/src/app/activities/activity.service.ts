@@ -1,10 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
+
 import { firstValueFrom } from 'rxjs';
+import moment from 'moment';
+
 import { AuthService } from '../security/auth.service';
 import { Activity } from '../core/model';
 
-import moment from 'moment';
+export interface ActivityFilter {
+  user?: any,
+  type?: string,
+  initialDate?: Date;
+  finalDate?: Date;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +26,45 @@ export class ActivityService {
 
   constructor(
     private http: HttpClient,
-    private auth: AuthService
+    private auth: AuthService,
+    private datePipe: DatePipe
   ) { }
 
   async listByUser(): Promise<any> {
     this.email = this.auth.jwtPayload?.sub;
     return await firstValueFrom(this.http.get(`${this.activitiesUrl}/user/${this.email}`));
+  }
+
+  async filter(filter: ActivityFilter): Promise<any> {
+    const headers = new HttpHeaders()
+      .append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
+
+    let params = new HttpParams();
+
+    if (filter.user) {
+      params = params.set('user', filter.user);
+    }
+
+    if (filter.type) {
+      params = params.set('type', filter.type);
+    }
+
+    if (filter.initialDate) {
+      params = params.set('initialDate', this.datePipe.transform(filter.initialDate, 'yyyy-MM-dd')!);
+    }
+
+    if (filter.finalDate) {
+      params = params.set('finalDate', this.datePipe.transform(filter.finalDate, 'yyyy-MM-dd')!);
+    }
+
+    try {
+      const response = await firstValueFrom(
+        this.http.get(`${this.activitiesUrl}?resumo`, { headers, params })
+      );
+      return response;
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 
   async add(activity: Activity): Promise<Activity> {
@@ -44,7 +86,7 @@ export class ActivityService {
     const response = await this.http.put<Activity>(`${this.activitiesUrl}/${activity.id}`, Activity.toJson(activity), { headers })
       .toPromise();
     const updated = response;
-    if(updated){
+    if (updated) {
       this.stringToDate(updated);
     }
     return updated;
@@ -54,7 +96,7 @@ export class ActivityService {
     const response = await this.http.get<Activity>(`${this.activitiesUrl}/${id}`)
       .toPromise();
     const activity = response;
-    if(activity){
+    if (activity) {
       this.stringToDate(activity);
     }
     return activity;
