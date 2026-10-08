@@ -81,23 +81,33 @@ export class AuthService {
 
     return !token || this.jwtHelper.isTokenExpired(token);
   }
+
+    clearAccessToken(): void {
+    localStorage.removeItem('token');
+    this.jwtPayload = null;
+  }
   
-  async logout(): Promise<void> {
-    const headers = new HttpHeaders()
-      .append('Content-Type', 'application/json');
-
-    const body = {};
-
+    async logout(): Promise<void> {
     try {
-      const response: any = await firstValueFrom(
-        this.http.post(this.logoutUrl, body, { headers, withCredentials: true })
+      await firstValueFrom(
+        this.http.post(this.logoutUrl, {}, { withCredentials: true })
       );
-      console.log(response);
-      this.storeToken(response['accessToken']);
-    } catch (response: any) {
-      return Promise.reject(response);
     } finally {
-      localStorage.removeItem('token');
+      this.clearAccessToken();
     }
+  }
+
+  hasPermission(permission: string): boolean {
+    const authorities: string = this.jwtPayload?.authorities ?? '';
+    return authorities.split(' ').includes(permission);
+  }
+
+  hasAnyPermission(roles: string[]): boolean {
+    for (const role of roles) {
+      if (this.hasPermission(role)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

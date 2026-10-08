@@ -7,7 +7,6 @@ import { ToastModule} from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
-import { AuthService } from './security/auth.service';
 import { NavbarComponent } from './core/navbar/navbar.component';
 import { ErrorHandlerService } from './core/error-handler.service';
 
@@ -24,7 +23,6 @@ registerLocaleData(localePt);
     ConfirmDialogModule
   ],
   providers: [
-    AuthService,
     MessageService,
     ConfirmationService,
     ErrorHandlerService,

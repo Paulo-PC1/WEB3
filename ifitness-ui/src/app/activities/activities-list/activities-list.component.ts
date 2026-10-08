@@ -58,7 +58,7 @@ export class ActivitiesListComponent {
     private errorHandler: ErrorHandlerService,
     private title: Title,
     private router: Router,
-    private auth: AuthService
+    public auth: AuthService
   ){ }
 
   ngOnInit(): void {

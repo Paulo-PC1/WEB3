@@ -67,7 +67,8 @@
               [routerLink]="['/activities', activity.id]"></a>
             <button pButton icon="pi pi-trash" pTooltip="Excluir" tooltipPosition="top"
               class="p-button-rounded p-button-text p-button-danger"
-              (click)="confirmRemoval(activity)"></button>
+              (click)="confirmRemoval(activity)"
+              [disabled]="!auth.hasPermission('ROLE_REMOVE_ACTIVITY')"></button>
           </td>
         </tr>
       </ng-template>
