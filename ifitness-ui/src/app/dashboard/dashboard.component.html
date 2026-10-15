@@ -1,0 +1,78 @@
+<div class="container">
+
+  <div class="mb-4">
+    <h2 class="fw-bold">Painel de Desempenho</h2>
+    <p class="text-muted text-center">Acompanhe o resumo das suas atividades físicas.</p>
+  </div>
+  <hr>
+
+  <!-- Linha 1: cards com os totais -->
+  <div class="row mb-2">
+    <div class="col-md-4 mb-3">
+      <div class="card p-3 shadow-sm border-start border-success border-4 text-center">
+        <h6 class="text-muted text-uppercase small">Distância Total</h6>
+        <h3 class="fw-bold text-success">{{ statistics.totalDistance | number: '1.2-2' }} Km</h3>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card p-3 shadow-sm border-start border-primary border-4 text-center">
+        <h6 class="text-muted text-uppercase small">Tempo Ativo</h6>
+        <h3 class="fw-bold text-primary">{{ statistics.totalDuration }} min</h3>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card p-3 shadow-sm border-start border-warning border-4 text-center">
+        <h6 class="text-muted text-uppercase small">Total de Treinos</h6>
+        <h3 class="fw-bold text-warning">{{ statistics.totalActivities }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Linha 2: resumo por tipo -->
+  <div class="row mb-4">
+    <div class="col-md-7 mb-3">
+      <div class="card p-3 shadow-sm h-100">
+        <h5 class="card-title text-success mb-3">
+          <i class="bi bi-list-check"></i> Resumo por Tipo
+        </h5>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Tipo</th>
+                <th>Treinos</th>
+                <th>Distância</th>
+                <th>Duração</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of statistics.byType">
+                <td>{{ typeLabels[item.type] }}</td>
+                <td>{{ item.total }}</td>
+                <td>{{ item.distance | number: '1.2-2' }} Km</td>
+                <td>{{ item.duration }} min</td>
+              </tr>
+              <tr *ngIf="statistics.byType.length === 0">
+                <td colspan="4" class="text-center text-muted">Nenhuma atividade cadastrada.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5 mb-3">
+      <div class="card p-3 shadow-sm h-100">
+        <h5 class="card-title text-success mb-3">
+          <i class="bi bi-pie-chart-fill"></i> Atividades por Tipo
+        </h5>
+        <div class="chart-container" *ngIf="statistics.byType.length > 0">
+          <p-chart type="doughnut" [data]="chartData" [options]="chartOptions"></p-chart>
+        </div>
+        <p class="text-center text-muted" *ngIf="statistics.byType.length === 0">
+          Nenhuma atividade cadastrada.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>

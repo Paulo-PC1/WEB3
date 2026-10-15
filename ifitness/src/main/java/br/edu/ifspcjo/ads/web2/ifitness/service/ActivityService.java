@@ -14,6 +14,8 @@ import br.edu.ifspcjo.ads.web2.ifitness.repository.ActivityRepository;
 import br.edu.ifspcjo.ads.web2.ifitness.repository.UserRepository;
 import br.edu.ifspcjo.ads.web2.ifitness.repository.filter.ActivityFilter;
 import br.edu.ifspcjo.ads.web2.ifitness.service.exception.NonExistentOrInactiveUserException;
+import br.edu.ifspcjo.ads.web2.ifitness.repository.projection.ActivityStatistics;
+import br.edu.ifspcjo.ads.web2.ifitness.repository.projection.ActivityTypeStatistic;
 import jakarta.validation.Valid;
 
 @Service
@@ -62,5 +64,21 @@ public class ActivityService {
 	public List<Activity> filter(ActivityFilter activityFilter){
 		return activityRepository.filter(activityFilter);
 	}
+	
+	public ActivityStatistics statistics(String email) {
+		List<ActivityTypeStatistic> byType = activityRepository.statisticsByType(email);
+
+		double totalDistance = 0;
+		long totalDuration = 0;
+		long totalActivities = 0;
+		for (ActivityTypeStatistic statistic : byType) {
+			totalDistance += statistic.distance();
+			totalDuration += statistic.duration();
+			totalActivities += statistic.total();
+		}
+
+		return new ActivityStatistics(totalDistance, totalDuration, totalActivities, byType);
+	}
+
 
 }

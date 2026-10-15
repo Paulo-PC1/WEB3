@@ -5,18 +5,12 @@ import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-message',
   imports: [CommonModule],
-  template: `
-    <div *ngIf="hasError()" class="p-message p-message-error">
+   template: `
+    <div *ngIf="hasError()" class="text-danger small mt-1">
       {{ text }}
     </div>
   `,
-  styles: `
-    .p-message-error {
-      padding: 3px;
-      margin: 0;
-      margin-top: 4px;
-    }
-  `
+  styles: ``
 })
 export class MessageComponent {
   @Input() error!: string;

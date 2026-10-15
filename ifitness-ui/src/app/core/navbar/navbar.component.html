@@ -1,19 +1,53 @@
-<nav class="navbar">
-
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
   <div class="container">
-    <div class="p-grid">
-      <div class="p-col-12">
-        <a href="javascript:;" class="navbar-toggle" (click)="displayingMenu = !displayingMenu">
-	  <i class="pi pi-bars"></i></a>
-      </div>
+
+    <!-- Nome do sistema -->
+    <a class="navbar-brand fw-bold" routerLink="/dashboard">
+      <i class="bi bi-heart-pulse-fill me-1"></i> iFitness
+    </a>
+
+    <!-- Botão que abre/fecha o menu em telas pequenas -->
+    <button class="navbar-toggler" type="button" aria-label="Abrir menu"
+      (click)="displayingMenu = !displayingMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" [class.show]="displayingMenu"
+      (click)="displayingMenu = false">
+
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active fw-semibold">
+            <i class="bi bi-speedometer2 me-1"></i> Painel Inicial
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/activities" routerLinkActive="active fw-semibold"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <i class="bi bi-table me-1"></i> Histórico
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/activities/new" routerLinkActive="active fw-semibold">
+            <i class="bi bi-plus-circle-fill me-1"></i> Nova Atividade
+          </a>
+        </li>
+      </ul>
+
+      <!-- Usuário logado (lado direito) -->
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item">
+          <span class="navbar-text me-lg-3">
+            <i class="bi bi-person-circle me-1"></i> {{ auth.jwtPayload?.name }}
+          </span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:;" (click)="logout()">
+            <i class="bi bi-box-arrow-right me-1"></i> Sair
+          </a>
+        </li>
+      </ul>
+
     </div>
   </div>
-
-  <ul class="navbar-menu" [hidden]="!displayingMenu">
-    <li class="navbar-user">{{ auth.jwtPayload?.name }}</li>
-    <li class="navbar-menuitem"><a href="#">Atividades</a></li>
-    <li class="navbar-menuitem"><a href="#">Estatísticas</a></li>
-    <li class="navbar-menuitem"><a href="javascript:;" (click)="logout()">Logout</a></li>
-  </ul>
-
 </nav>

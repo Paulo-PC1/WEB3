@@ -1,15 +1,16 @@
 <div class="container">
-  
+
   <form autocomplete="off" (ngSubmit)="filter()" class="p-grid p-fluid">
 
     <div class="p-col-12 text-center">
       <h1>Atividades Físicas</h1>
     </div>
 
-    <fieldset class="p-col-12 p-md-12 mb-3">
+        <fieldset class="filtros mb-3">
       <legend><i class="pi pi-filter mr-2"></i>Filtros de Pesquisa</legend>
 
-      <p-select [options]="types" placeholder="Selecione" name="type" [(ngModel)]="type">
+      <p-select [options]="types" placeholder="Selecione" name="type" [(ngModel)]="type"
+        [style]="{ width: '100%' }">
       </p-select>
 
       <div class="mt-2">
@@ -81,8 +82,7 @@
       </ng-template>
     </p-table>
   </div>
-  <div class="p-col-12">
+  <div class="p-col-12 mt-3 text-center">
     <p><a pButton label="Nova Atividade" icon="pi pi-plus" routerLink="/activities/new"></a></p>
   </div>
 </div>
-

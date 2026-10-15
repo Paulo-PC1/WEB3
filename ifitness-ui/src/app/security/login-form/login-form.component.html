@@ -1,37 +1,39 @@
 <div class="container">
+  <div class="col-lg-4 offset-lg-4 col-sm-12">
 
-  {{ msg }}
+    <form autocomplete="off" #f="ngForm">
+      <h1 class="text-center">Login</h1>
 
-  <form autocomplete="off" #f="ngForm">
-    <div class="p-grid p-fluid login">
-
-      <div class="p-col-12 title">
-        <h1>Login</h1>
+      <div class="alert alert-danger" role="alert" *ngIf="msg">
+        {{ msg }}
       </div>
 
-      <div class="p-col-12">
-        <p><input pInputText type="email" name="user" placeholder="E-mail"
+      <div class="input-group mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-envelope"></i>
+        </span>
+        <input type="email" name="user" placeholder="E-mail" class="form-control"
           ngModel required #user>
-        </p>
       </div>
 
-      <div class="p-col-12">
-        <p>
-          <input pInputText type="password" name="password" placeholder="Senha"
+      <div class="input-group mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-file-lock"></i>
+        </span>
+        <input type="password" name="password" placeholder="Senha" class="form-control"
           ngModel required #password>
-        </p>
-
       </div>
 
-      <div class="p-col-12">
-        <p><button pButton type="submit" label="Login" 
-            [disabled]="!f.valid"
-          (click)="login(user.value, password.value)"></button>
-        </p>
-        <a pButton label="Cadastrar" routerLink="/users/new"></a>
+      <div class="mb-3">
+        <button type="submit" class="btn btn-primary" [disabled]="!f.valid"
+          (click)="login(user.value, password.value)">Login</button>
       </div>
 
-    </div>
-  </form>
+      <div class="mb-3">
+        <a routerLink="/users/new" class="btn btn-secondary">Cadastrar</a>
+      </div>
 
+    </form>
+
+  </div>
 </div>

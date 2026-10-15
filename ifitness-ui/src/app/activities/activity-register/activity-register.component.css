@@ -1,0 +1,11 @@
+.filtros {
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;   /* centraliza horizontalmente */
+}
+
+@media (max-width: 768px) {
+  .filtros {
+    width: 100%;
+  }
+}

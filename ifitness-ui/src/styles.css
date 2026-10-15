@@ -2,41 +2,19 @@
 @import "primeicons/primeicons.css";
 
 body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #404C51;
+  background-color: lightgrey;
+}
+
+h2 {
+  color: green;
+  text-align: center;
 }
 
 .col-actions-header {
   width: 120px;
 }
 
-.col-actions {
-  width: 120px;
-  text-align: center;
-}
-
-.col-actions .p-button {
-  margin: 1px;
-}
-
-form {
-  margin-right: .25em;
-  max-width: 400px;
-  margin: auto;
-}
-
-.title {
-  text-align: center;
-}
-
-button, input, .p-select  {
+/* Botões dos formulários ocupam toda a largura */
+form .btn {
   width: 100%;
-}
-
-@media (min-width: 1200px) {
-  .container {
-    width: 1170px;
-    margin: 0 auto;
-  }
 }
