@@ -17,6 +17,8 @@ import br.edu.ifspcjo.ads.web2.ifitness.service.exception.NonExistentOrInactiveU
 import br.edu.ifspcjo.ads.web2.ifitness.repository.projection.ActivityStatistics;
 import br.edu.ifspcjo.ads.web2.ifitness.repository.projection.ActivityTypeStatistic;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ActivityService {
@@ -61,8 +63,8 @@ public class ActivityService {
 		return null;
 	}
 	
-	public List<Activity> filter(ActivityFilter activityFilter){
-		return activityRepository.filter(activityFilter);
+	public Page<Activity> filter(ActivityFilter activityFilter, Pageable pageable){
+		return activityRepository.filter(activityFilter, pageable);
 	}
 	
 	public ActivityStatistics statistics(String email) {

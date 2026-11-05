@@ -8,11 +8,15 @@ import moment from 'moment';
 import { AuthService } from '../security/auth.service';
 import { Activity, ActivityStatistics } from '../core/model';
 
-export interface ActivityFilter {
-  user?: any,
-  type?: string,
+export class ActivityFilter {
+  user?: any;
+  type?: string;
   initialDate?: Date;
   finalDate?: Date;
+  page = 0;
+  itemsPerPage = 5;
+  sortField = 'date';
+  sortOrder = -1; // 1 = crescente, -1 = decrescente
 }
 
 @Injectable({
@@ -36,10 +40,13 @@ export class ActivityService {
   }
 
   async filter(filter: ActivityFilter): Promise<any> {
-    const headers = new HttpHeaders()
-      .append('Authorization', 'Basic YWRtaW5AYWxnYW1vbmV5LmNvbTphZG1pbg==');
+    const direction = filter.sortOrder === 1 ? 'asc' : 'desc';
 
-    let params = new HttpParams();
+    let params = new HttpParams()
+      .set('page', filter.page)
+      .set('size', filter.itemsPerPage)
+      .set('sort', `${filter.sortField},${direction}`);
+
 
     if (filter.user) {
       params = params.set('user', filter.user);
@@ -57,14 +64,16 @@ export class ActivityService {
       params = params.set('finalDate', this.datePipe.transform(filter.finalDate, 'yyyy-MM-dd')!);
     }
 
-    try {
-      const response = await firstValueFrom(
-        this.http.get(`${this.activitiesUrl}?resumo`, { headers, params })
-      );
-      return response;
-    } catch (error) {
-      return Promise.reject(error);
-    }
+    const response: any = await firstValueFrom(
+      this.http.get(this.activitiesUrl, { params })
+    );
+
+    // A API devolve uma página: os registros ficam em "content"
+    // e o total de registros (de todas as páginas) em "totalElements"
+    return {
+      activities: response.content,
+      total: response.totalElements
+    };
   }
 
   async add(activity: Activity): Promise<Activity> {
@@ -111,5 +120,4 @@ export class ActivityService {
       this.http.get<ActivityStatistics>(`${this.activitiesUrl}/statistics`)
     );
   }
-
 }

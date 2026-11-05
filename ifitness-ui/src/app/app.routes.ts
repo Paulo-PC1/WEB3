@@ -8,7 +8,6 @@ import { authGuard } from './security/auth.guard';
 import { NotAuthorizedComponent } from './core/not-authorized.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
-
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
@@ -16,6 +15,12 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
     data: { roles: ['ROLE_SEARCH_ACTIVITY'] }
+  },
+  {
+    path: 'activities/:id',
+    component: ActivityRegisterComponent,
+    canActivate: [authGuard],
+    data: { roles: ['ROLE_REGISTER_ACTIVITY'] }
   },
   {
     path: 'activities',

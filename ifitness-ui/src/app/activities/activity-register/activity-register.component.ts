@@ -29,7 +29,7 @@ import { Title } from '@angular/platform-browser';
     MessageComponent,
     RouterModule
    ],
-   providers:[
+  providers:[
     Title
   ],
   templateUrl: './activity-register.component.html',
@@ -63,7 +63,7 @@ export class ActivityRegisterComponent {
     if(id != 'new'){
       this.loadActivity(id);
     }
-    this.title.setTitle('Cadastro de Atividade');// aqui!
+    this.title.setTitle('Cadastro de Atividade');
   }
 
   get editing(): boolean {

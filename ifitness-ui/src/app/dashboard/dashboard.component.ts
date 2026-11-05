@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
-import { ActivityService } from '../activities/activity.service';
+import { ActivityFilter, ActivityService } from '../activities/activity.service';
+import { AuthService } from '../security/auth.service';
 import { ErrorHandlerService } from '../core/error-handler.service';
 import { ActivityStatistics } from '../core/model';
 import { ChartModule } from 'primeng/chart';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +28,7 @@ export class DashboardComponent implements OnInit {
     totalDistance: 0,
     totalDuration: 0,
     totalActivities: 0,
-    byType: []
+    byType: [],
   };
 
   typeLabels: any = {
@@ -37,6 +39,7 @@ export class DashboardComponent implements OnInit {
   };
 
   chartData: any;
+  recentActivities: any[] = [];
 
   chartOptions = {
     plugins: {
@@ -47,12 +50,29 @@ export class DashboardComponent implements OnInit {
   constructor(
     private activityService: ActivityService,
     private errorHandler: ErrorHandlerService,
-    private title: Title
+    private title: Title,
+    private auth: AuthService
   ) { }
 
   ngOnInit(): void {
     this.title.setTitle('Painel Inicial');
     this.loadStatistics();
+    this.loadRecentActivities();
+  }
+
+  // Reaproveita a consulta paginada: primeira página, 5 registros, mais recentes primeiro
+  loadRecentActivities(): void {
+    const filter = new ActivityFilter();
+    filter.user = this.auth.jwtPayload?.user_id;
+    filter.itemsPerPage = 5;
+    filter.sortField = 'date';
+    filter.sortOrder = -1;
+
+    this.activityService.filter(filter)
+      .then(result => {
+        this.recentActivities = result.activities;
+      })
+      .catch(error => this.errorHandler.handle(error));
   }
 
   loadStatistics(): void {

@@ -73,6 +73,35 @@
         </p>
       </div>
     </div>
+    <!-- Linha 3: últimas atividades -->
+  <div class="card p-3 shadow-sm mb-4">
+    <h5 class="card-title text-success mb-3">
+      <i class="bi bi-calendar-event"></i> Últimas Atividades
+    </h5>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Data</th>
+            <th>Categoria</th>
+            <th>Distância</th>
+            <th>Duração</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let activity of recentActivities">
+            <td>{{ activity.date }}</td>
+            <td>{{ typeLabels[activity.type] }}</td>
+            <td>{{ activity.distance | number: '1.2-2' }} Km</td>
+            <td>{{ activity.duration }} min</td>
+          </tr>
+          <tr *ngIf="recentActivities.length === 0">
+            <td colspan="4" class="text-center text-muted">Nenhuma atividade cadastrada.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   </div>
 
 </div>

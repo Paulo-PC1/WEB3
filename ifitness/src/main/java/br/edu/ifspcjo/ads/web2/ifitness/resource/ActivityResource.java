@@ -24,6 +24,8 @@ import br.edu.ifspcjo.ads.web2.ifitness.repository.filter.ActivityFilter;
 import br.edu.ifspcjo.ads.web2.ifitness.service.ActivityService;
 import br.edu.ifspcjo.ads.web2.ifitness.repository.projection.ActivityStatistics;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 @RequestMapping("/activities")
@@ -37,8 +39,8 @@ public class ActivityResource {
 
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_ACTIVITY')")
-	public List<Activity> filter(ActivityFilter activityFilter){
-		return activityService.filter(activityFilter);
+	public Page<Activity> filter(ActivityFilter activityFilter, Pageable pageable){
+		return activityService.filter(activityFilter, pageable);
 	}
 	
 	@GetMapping("/statistics")

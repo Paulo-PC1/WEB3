@@ -4,9 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
-import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
-import { TooltipModule } from 'primeng/tooltip';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -14,7 +12,6 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { ActivityFilter, ActivityService } from '../activity.service';
 import { ErrorHandlerService } from '../../core/error-handler.service';
 import { AuthService } from '../../security/auth.service';
-import { User } from '../../core/model';
 
 @Component({
   selector: 'app-activities-list',
@@ -22,9 +19,7 @@ import { User } from '../../core/model';
   imports: [
     CommonModule,
     FormsModule,
-    ButtonModule,
     TableModule,
-    TooltipModule,
     RouterModule,
     SelectModule,
     DatePickerModule
@@ -37,9 +32,7 @@ import { User } from '../../core/model';
 })
 export class ActivitiesListComponent {
 
-  type?: string;
-  initialDate?: Date;
-  finalDate?: Date;
+  filter = new ActivityFilter();
 
   types = [
     { label: 'Todos', value: '' },
@@ -49,7 +42,11 @@ export class ActivitiesListComponent {
     { label: 'Natação', value: 'NATACAO' }
   ];
 
-  activities = []
+  activities = [];
+
+  totalRecords = 0;
+
+  first = 0; // posição do primeiro registro da página exibida
 
   constructor(
     private activityService: ActivityService,
@@ -63,28 +60,37 @@ export class ActivitiesListComponent {
 
   ngOnInit(): void {
     this.title.setTitle('Lista de Atividades');
-    this.filter();
   }
 
-  filter(): void {
-    const filter: ActivityFilter = {
-      user: new User().id = this.auth.jwtPayload?.user_id,
-      type: this.type,
-      initialDate: this.initialDate,
-      finalDate: this.finalDate
-    }
+  search(page: number = 0): void {
+    this.filter.user = this.auth.jwtPayload?.user_id;
+    this.filter.page = page;
+    this.first = page * this.filter.itemsPerPage;
 
-    this.activityService.filter(filter)
+    this.activityService.filter(this.filter)
       .then(result => {
-        this.activities = result;
+        this.activities = result.activities;
+        this.totalRecords = result.total;
       })
       .catch(error => this.errorHandler.handle(error));
+  }
 
+  // Chamado pela tabela ao abrir a página e ao trocar de página
+  whenChangePage(event: TableLazyLoadEvent): void {
+    this.filter.sortField = event.sortField as string;
+    this.filter.sortOrder = event.sortOrder as number;
+    const page = event.first! / event.rows!;
+    this.search(page);
   }
 
   confirmRemoval(activity: any): void {
     this.confirmation.confirm({
-      message: 'Tem certeza que deseja excluir?',
+      header: 'Exclusão',
+      message: 'Tem certeza que deseja excluir a atividade?',
+      acceptLabel: 'Excluir',
+      rejectLabel: 'Cancelar',
+      acceptButtonProps: { severity: 'danger' },
+      rejectButtonProps: { severity: 'secondary' },
       accept: () => {
         this.delete(activity);
       }
@@ -94,7 +100,7 @@ export class ActivitiesListComponent {
   delete(activity: any): void {
     this.activityService.delete(activity.id)
       .then(() => {
-        this.filter();
+        this.search();
         this.messageService.add({ severity: 'success', detail: 'Atividade excluída com sucesso!' });
       })
       .catch(error => this.errorHandler.handle(error));
