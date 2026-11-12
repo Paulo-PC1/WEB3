@@ -26,6 +26,15 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateCrtKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
+
+import org.springframework.beans.factory.annotation.Value;
+
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -38,17 +47,29 @@ import com.nimbusds.jose.proc.SecurityContext;
 @EnableMethodSecurity
 public class SecurityConfig {
 	
-    // Bean que gera o KeyPair na inicialização.
-    // Este Bean será um singleton, então o mesmo par de chaves será usado
-    // durante todo o ciclo de vida da aplicação.
+	// Par de chaves RSA usado para assinar e validar os tokens.
+    // - Desenvolvimento (propriedade vazia): gera um par novo a cada inicialização.
+    // - Produção: usa a chave privada informada na configuração. Assim os tokens
+    //   continuam válidos quando a aplicação é reiniciada.
     @Bean
-    KeyPair keyPair() {
+    KeyPair keyPair(@Value("${ifitness.jwt.private-key}") String privateKeyBase64) {
         try {
-            var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            return keyPairGenerator.generateKeyPair();
+            if (privateKeyBase64.isBlank()) {
+                var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+                keyPairGenerator.initialize(2048);
+                return keyPairGenerator.generateKeyPair();
+            }
+
+            byte[] keyBytes = Base64.getDecoder().decode(privateKeyBase64.trim());
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            RSAPrivateCrtKey privateKey = (RSAPrivateCrtKey) keyFactory.generatePrivate(
+                    new PKCS8EncodedKeySpec(keyBytes));
+            // A chave pública é calculada a partir da chave privada
+            PublicKey publicKey = keyFactory.generatePublic(
+                    new RSAPublicKeySpec(privateKey.getModulus(), privateKey.getPublicExponent()));
+            return new KeyPair(publicKey, privateKey);
         } catch (Exception ex) {
-            throw new IllegalStateException("Não foi possível gerar o par de chaves RSA", ex);
+            throw new IllegalStateException("Não foi possível obter o par de chaves RSA", ex);
         }
     }
 

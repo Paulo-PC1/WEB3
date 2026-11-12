@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.beans.factory.annotation.Value;
 
 import br.edu.ifspcjo.ads.web2.ifitness.service.TokenService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +29,12 @@ public class AuthController {
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    
+    @Value("${ifitness.cookie.path}")
+    private String cookiePath;
+
+    @Value("${ifitness.cookie.secure}")
+    private boolean cookieSecure;
 
     // DTOs para requisição e resposta
     public record LoginRequest(String username, String password) {}
@@ -48,13 +55,9 @@ public class AuthController {
         String refreshToken = tokenService.generateRefreshToken(authentication);
 
         // Cria o cookie com o refresh token
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
-                .httpOnly(true) // Impede acesso via JavaScript (XSS protection)
-                .secure(false)   // true - Enviar apenas em HTTPS (essencial em produção)
-                .path("/auth") // Caminho onde o cookie é válido
-                .maxAge(REFRESH_TOKEN_DURATION_SEC) // Tempo de vida do cookie
-                .sameSite("Strict") // Restringe o envio do cookie a requisições do mesmo site (CSRF protection)
-                .build();
+     // Cria o cookie com o refresh token
+        ResponseCookie cookie = refreshTokenCookie(refreshToken, REFRESH_TOKEN_DURATION_SEC);
+
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return new LoginResponse(accessToken);
@@ -71,10 +74,8 @@ public class AuthController {
                     String newAccessToken = tokenService.generateToken(authentication);
                     String newRefreshToken = tokenService.generateRefreshToken(authentication);
                     
-                    // Gera e define o novo cookie de refresh token
-                    ResponseCookie cookie = ResponseCookie.from("refreshToken", newRefreshToken)
-                        .httpOnly(true).secure(false).path("/auth")
-                        .maxAge(REFRESH_TOKEN_DURATION_SEC).sameSite("Strict").build();
+                 // Gera e define o novo cookie de refresh token
+                    ResponseCookie cookie = refreshTokenCookie(newRefreshToken, REFRESH_TOKEN_DURATION_SEC);
                     
                     response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
                     return new LoginResponse(newAccessToken);
@@ -86,12 +87,21 @@ public class AuthController {
     @PostMapping("/logout")
     public void logout(HttpServletResponse response) {
         // Para fazer logout, criamos um cookie que expira imediatamente
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true).secure(false).path("/auth")
-                .maxAge(0) // Expira o cookie
-                .sameSite("Strict").build();
+    	// Para fazer logout, criamos um cookie que expira imediatamente
+        ResponseCookie cookie = refreshTokenCookie("", 0);
         
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+    
+ // Monta o cookie do refresh token. O caminho e a exigência de HTTPS vêm da configuração.
+    private ResponseCookie refreshTokenCookie(String value, long maxAge) {
+        return ResponseCookie.from("refreshToken", value)
+                .httpOnly(true)       // Impede acesso via JavaScript (XSS protection)
+                .secure(cookieSecure) // true = enviar apenas em HTTPS (produção)
+                .path(cookiePath)     // Caminho onde o cookie é válido
+                .maxAge(maxAge)       // Tempo de vida do cookie (0 = apagar)
+                .sameSite("Strict")   // Restringe o envio a requisições do mesmo site (CSRF protection)
+                .build();
     }
     
 }

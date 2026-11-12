@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import br.edu.ifspcjo.ads.web2.ifitness.domain.model.User;
 import br.edu.ifspcjo.ads.web2.ifitness.repository.UserRepository;
@@ -27,6 +28,9 @@ public class TokenService {
     
     @Autowired
 	private UserRepository userRepository;
+    
+    @Value("${ifitness.jwt.access-token-seconds}")
+    private long accessTokenSeconds;
 
     public TokenService(JwtEncoder encoder, JwtDecoder decoder) {
         this.encoder = encoder;
@@ -43,7 +47,7 @@ public class TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(30, ChronoUnit.SECONDS)) // Token expira em 30 segundos
+                .expiresAt(now.plus(accessTokenSeconds, ChronoUnit.SECONDS)) // Duração definida na configuração
                 .subject(authentication.getName())
                 .claim("authorities", authorities)
                 .claim("user_id", userOptional.get().getId())
